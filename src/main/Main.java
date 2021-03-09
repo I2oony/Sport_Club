@@ -3,7 +3,6 @@ package main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.time.chrono.JapaneseDate;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
