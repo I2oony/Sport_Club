@@ -43,4 +43,11 @@ public class DatabaseConnect {
         return this.source.getConnection();
     }
 
+
+    public String getHost() {
+        return host;
+    }
+    public int getPort() {
+        return port;
+    }
 }

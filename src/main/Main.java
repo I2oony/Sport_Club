@@ -2,8 +2,9 @@ package main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Main {
     enum Role {
@@ -12,6 +13,10 @@ public class Main {
     };
 
     public static void main(String[] args) {
+        AtomicReference<String> host = new AtomicReference<>("localhost");
+        AtomicInteger port = new AtomicInteger(3306);
+        String database = "sport";
+
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Point center = new Point();
 
@@ -33,13 +38,13 @@ public class Main {
         mainFrame.setLocation(center.x - windowSize.width / 2, center.y - windowSize.height / 2);
 
         JFrame settingsFrame = new JFrame();
-        settingsFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        settingsFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         settingsFrame.setSize(500,400);
         settingsFrame.setResizable(false);
         settingsFrame.setTitle("Спортивный клуб - настройки подключения");
         settingsFrame.setVisible(false);
 
-        DatabaseConnect source = new DatabaseConnect("localhost", 3306, "sport");
+
 
         WelcomeScreen welcomeScreen = new WelcomeScreen();
         MainScreen mainScreen = new MainScreen();
@@ -48,6 +53,7 @@ public class Main {
         ActionListener actions = e -> {
             String action = e.getActionCommand();
             System.out.println("Action performed: " + action);
+            DatabaseConnect source = new DatabaseConnect(host.get(), port.get(), database);
             switch (action) {
                 case "openSportsmanScreen":
                     mainScreen.setRole(Role.SPORTSMAN);
@@ -64,6 +70,7 @@ public class Main {
                     mainFrame.revalidate();
                     break;
                 case "openWelcomeScreen":
+                    mainScreen.clearData();
                     mainFrame.setContentPane(welcomeScreen.getScreen());
                     mainFrame.revalidate();
                     break;
@@ -72,6 +79,8 @@ public class Main {
                     break;
                 case "openSettings":
                     mainFrame.setEnabled(false);
+                    settingsScreen.setCurrentHostField(host.get());
+                    settingsScreen.setCurrentPortField(port.toString());
                     settingsFrame.setLocation(new Point(
                             mainFrame.getX()+mainFrame.getWidth()/2-settingsFrame.getWidth()/2,
                             mainFrame.getY()+mainFrame.getHeight()/2-settingsFrame.getHeight()/2));
@@ -81,6 +90,28 @@ public class Main {
                     settingsFrame.setVisible(false);
                     mainFrame.setVisible(true);
                     mainFrame.setEnabled(true);
+                    break;
+                case "settingsSave":
+                    settingsScreen.setErrorText(" ");
+                    String hostField = settingsScreen.getHostField();
+                    String portField = settingsScreen.getPortField();
+
+                    int portValue = port.get();
+                    String hostValue = host.get();
+                    try {
+                        if (!hostField.equals("localhost")) {
+                            throw new Throwable();
+                        }
+                        portValue = Integer.parseInt(portField);
+                    } catch (NumberFormatException exception) {
+                        settingsScreen.addErrorText("Порт введён неверно! Допустимые значения: 0-65535");
+                    } catch (Throwable textException) {
+                        settingsScreen.addErrorText("Адрес введён неверно! Допустимые значения: валидный IPv4 или 'localhost");
+                    }
+                    host.set(hostValue);
+                    port.set(portValue);
+                    settingsScreen.setCurrentHostField(host.get());
+                    settingsScreen.setCurrentPortField(port.toString());
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value at action switch: " + action);

@@ -26,13 +26,21 @@ public class MainScreen {
     private JLabel userRole;
     private JPanel selector;
     private JPanel titlePanel;
+    private JLabel statusTitle;
+    private JPanel statusPanel;
+    private JPanel metricsPanel;
+    private JLabel stateTitle;
+    private JLabel stateValue;
+    private JLabel hostTitle;
+    private JLabel hostValue;
+    private JLabel portTitle;
+    private JLabel portValue;
 
     Role role;
     DatabaseConnect databaseConnect;
     Connection connect;
 
     public JPanel getScreen(){
-        System.out.println("Current role: " + role);
         return rootPanel;
     }
 
@@ -41,6 +49,7 @@ public class MainScreen {
         if (r.equals(Role.SPORTSMAN)) {
             userRole.setText("Спортсмен");
         } else {
+            statusPanel.setVisible(true);
             userRole.setText("Тренер");
         }
     }
@@ -49,7 +58,6 @@ public class MainScreen {
         try {
             this.databaseConnect = databaseConnect;
             connect = this.databaseConnect.getConnection();
-            System.out.println("Database successfully connected!");
 
             Statement statement = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             String query = "select table_name from information_schema.TABLES where TABLE_SCHEMA='sport'";
@@ -69,8 +77,9 @@ public class MainScreen {
             };
             statement.close();
             connect.close();
+            updateServerState("OK");
         } catch (SQLException e) {
-            System.out.println("Can't connect to database!" + e.getMessage());
+            updateServerState("Can't connect to database!");
         }
     }
 
@@ -118,9 +127,30 @@ public class MainScreen {
 
                 scrollPane.setColumnHeaderView(tableHeader);
                 scrollPane.setViewportView(tableView);
+                updateServerState("OK");
             } catch (Throwable e) {
-                throw new Error("Problem at setTable: ", e);
+                updateServerState("Can't fetch selected table");
             }
+        }
+    }
+
+    public void clearData() {
+        scrollPane.setColumnHeaderView(null);
+        scrollPane.setViewportView(null);
+        tableSelector.removeAllItems();
+    }
+
+    public void updateServerState(String state) {
+        if (state.equals("OK")) {
+            stateValue.setText("Подключен");
+            stateValue.setForeground(Colors.O_GREEN);
+            hostValue.setText(databaseConnect.getHost());
+            portValue.setText(String.valueOf(databaseConnect.getPort()));
+        } else {
+            stateValue.setText("Ошибка подключения: " + state);
+            stateValue.setForeground(Colors.O_RED);
+            hostValue.setText(null);
+            portValue.setText(null);
         }
     }
 }
