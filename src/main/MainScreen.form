@@ -82,7 +82,7 @@
               </component>
             </children>
           </grid>
-          <grid id="72730" binding="editingDataPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="4">
+          <grid id="72730" binding="editingDataPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="4">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -98,10 +98,12 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <actionCommand value="openEditWindow"/>
                   <background color="-16762793"/>
                   <focusable value="false"/>
+                  <font name="Segoe UI" size="16" style="0"/>
                   <foreground color="-4136976"/>
-                  <text value="Изменить существующую запись"/>
+                  <text value="Изменить выбранную запись"/>
                 </properties>
               </component>
               <component id="9c756" class="javax.swing.JButton" binding="addRowButton">
@@ -109,10 +111,26 @@
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <actionCommand value="openAddWindow"/>
                   <background color="-16762793"/>
                   <focusable value="false"/>
+                  <font name="Segoe UI" size="16" style="0"/>
                   <foreground color="-4136976"/>
                   <text value="Добавить новую запись"/>
+                </properties>
+              </component>
+              <component id="d6098" class="javax.swing.JButton" binding="deleteRowButton">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <actionCommand value="deleteRow"/>
+                  <background color="-1820073"/>
+                  <focusable value="false"/>
+                  <font name="Segoe UI" size="16" style="0"/>
+                  <foreground color="-4136976"/>
+                  <text value="Удалить выбранную запись"/>
+                  <visible value="false"/>
                 </properties>
               </component>
             </children>

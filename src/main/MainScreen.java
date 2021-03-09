@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.EventObject;
 
 import main.Main.Role;
 
@@ -38,6 +39,7 @@ public class MainScreen {
     private JPanel editingDataPanel;
     private JButton editRowButton;
     private JButton addRowButton;
+    private JButton deleteRowButton;
 
     Role role;
     DatabaseConnect databaseConnect;
@@ -90,6 +92,9 @@ public class MainScreen {
     public void addActionListener(ActionListener actionListener) {
         logoutButton.addActionListener(actionListener);
         tableSelector.addActionListener(actionListener);
+
+        editRowButton.addActionListener(actionListener);
+        addRowButton.addActionListener(actionListener);
     }
 
     public void setTable() {
@@ -122,10 +127,20 @@ public class MainScreen {
                 statement.close();
                 connect.close();
 
-                tableView = new JTable(data, colsNames);
+                tableView = new JTable(data, colsNames) {
+                    @Override
+                    public boolean editCellAt(int row, int column, EventObject e) {
+                        return false;
+                    }
+                };
                 tableView.setGridColor(Color.BLACK);
                 tableView.setFillsViewportHeight(true);
-                tableView.setEnabled(false);
+
+                if (role.equals(Role.SPORTSMAN)) {
+                    tableView.setEnabled(false);
+                } else {
+                    tableView.setEnabled(true);
+                }
 
                 JTableHeader tableHeader = tableView.getTableHeader();
 
@@ -157,4 +172,19 @@ public class MainScreen {
             portValue.setText(null);
         }
     }
+/*
+    public int getSelectedRowId() {
+        int id = 0;
+        try {
+            int rowIndex = tableView.getSelectedRow();
+            System.out.println("Row: " + rowIndex);
+            id = (int) tableView.getValueAt(rowIndex, tableView.getSelectedColumn());
+            System.out.println("Want to delete: " + id);
+            return id;
+        } catch (Throwable e) {
+            System.out.println("Something went wrong...");
+            return id;
+        }
+    }
+    */
 }

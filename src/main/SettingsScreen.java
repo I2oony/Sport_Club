@@ -61,6 +61,5 @@ public class SettingsScreen {
         } else {
             errorMessage.setText(errorMessage.getText() + "\n" + text);
         }
-
     }
 }

@@ -3,6 +3,7 @@ package main;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.time.chrono.JapaneseDate;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -30,7 +31,7 @@ public class Main {
         JFrame mainFrame = new JFrame();
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        mainFrame.setMinimumSize(new Dimension(800, 600));
+        mainFrame.setMinimumSize(new Dimension(1000, 600));
         mainFrame.setSize(windowSize);
         mainFrame.setResizable(true);
         mainFrame.setTitle("Спортивный клуб");
@@ -44,11 +45,17 @@ public class Main {
         settingsFrame.setTitle("Спортивный клуб - настройки подключения");
         settingsFrame.setVisible(false);
 
-
+        JFrame passwordFrame = new JFrame();
+        passwordFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        passwordFrame.setSize(400,220);
+        passwordFrame.setResizable(false);
+        passwordFrame.setTitle("Спортивный клуб - введите пароль");
+        passwordFrame.setVisible(false);
 
         WelcomeScreen welcomeScreen = new WelcomeScreen();
         MainScreen mainScreen = new MainScreen();
         SettingsScreen settingsScreen = new SettingsScreen();
+        PasswordScreen passwordScreen = new PasswordScreen();
 
         ActionListener actions = e -> {
             String action = e.getActionCommand();
@@ -62,12 +69,12 @@ public class Main {
                     mainFrame.setContentPane(mainScreen.getScreen());
                     mainFrame.revalidate();
                     break;
-                case "openTrainerScreen":
-                    mainScreen.setRole(Role.TRAINER);
-                    source.setCredentials("trainer", "TrainerPassword");
-                    mainScreen.setDatabaseConnect(source);
-                    mainFrame.setContentPane(mainScreen.getScreen());
-                    mainFrame.revalidate();
+                case "openPassword":
+                    mainFrame.setEnabled(false);
+                    passwordFrame.setLocation(new Point(
+                            mainFrame.getX()+mainFrame.getWidth()/2-passwordFrame.getWidth()/2,
+                            mainFrame.getY()+mainFrame.getHeight()/2-passwordFrame.getHeight()/2));
+                    passwordFrame.setVisible(true);
                     break;
                 case "openWelcomeScreen":
                     mainScreen.clearData();
@@ -114,6 +121,33 @@ public class Main {
                     settingsScreen.setCurrentHostField(host.get());
                     settingsScreen.setCurrentPortField(port.toString());
                     break;
+                case "closePassword":
+                    passwordFrame.setVisible(false);
+                    mainFrame.setVisible(true);
+                    mainFrame.setEnabled(true);
+                    break;
+                case "loginPassword":
+                    passwordScreen.setErrorVisible(false);
+                    String password = passwordScreen.getPasswordField();
+                    if (password.equals("TrainerPassword")) {
+                        passwordFrame.setVisible(false);
+                        mainFrame.setVisible(true);
+                        mainFrame.setEnabled(true);
+
+                        mainScreen.setRole(Role.TRAINER);
+                        source.setCredentials("trainer", "TrainerPassword");
+                        mainScreen.setDatabaseConnect(source);
+                        mainFrame.setContentPane(mainScreen.getScreen());
+                        mainFrame.revalidate();
+                    } else {
+                        passwordScreen.setErrorVisible(true);
+                    }
+/*                case "deleteRow":
+                    mainScreen.getSelectedRowId();*/
+                case "openEditWindow":
+                    break;
+                case "openAddWindow":
+                    break;
                 default:
                     throw new IllegalStateException("Unexpected value at action switch: " + action);
             }
@@ -122,8 +156,10 @@ public class Main {
         welcomeScreen.addActionListener(actions);
         mainScreen.addActionListener(actions);
         settingsScreen.addActionListener(actions);
+        passwordScreen.addActionListener(actions);
 
         settingsFrame.setContentPane(settingsScreen.getScreen());
+        passwordFrame.setContentPane(passwordScreen.getScreen());
 
         mainFrame.setContentPane(welcomeScreen.getScreen());
         mainFrame.setVisible(true);
