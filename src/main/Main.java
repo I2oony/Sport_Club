@@ -99,14 +99,15 @@ public class Main {
                     int portValue = port.get();
                     String hostValue = host.get();
                     try {
-                        if (!hostField.equals("localhost")) {
+                        if (!(hostField.equals("localhost") || hostField.equals("88.201.152.94"))) {
                             throw new Throwable();
                         }
+                        hostValue = hostField;
                         portValue = Integer.parseInt(portField);
                     } catch (NumberFormatException exception) {
                         settingsScreen.addErrorText("Порт введён неверно! Допустимые значения: 0-65535");
                     } catch (Throwable textException) {
-                        settingsScreen.addErrorText("Адрес введён неверно! Допустимые значения: валидный IPv4 или 'localhost");
+                        settingsScreen.addErrorText("Адрес введён неверно! Допустимые значения: '88.201.152.94' или 'localhost");
                     }
                     host.set(hostValue);
                     port.set(portValue);
