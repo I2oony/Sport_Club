@@ -35,6 +35,9 @@ public class MainScreen {
     private JLabel hostValue;
     private JLabel portTitle;
     private JLabel portValue;
+    private JPanel editingDataPanel;
+    private JButton editRowButton;
+    private JButton addRowButton;
 
     Role role;
     DatabaseConnect databaseConnect;
@@ -47,9 +50,10 @@ public class MainScreen {
     public void setRole(Role r){
         role = r;
         if (r.equals(Role.SPORTSMAN)) {
+            editingDataPanel.setVisible(false);
             userRole.setText("Спортсмен");
         } else {
-            statusPanel.setVisible(true);
+            editingDataPanel.setVisible(true);
             userRole.setText("Тренер");
         }
     }

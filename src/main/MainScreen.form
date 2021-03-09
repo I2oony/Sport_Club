@@ -82,14 +82,40 @@
               </component>
             </children>
           </grid>
-          <grid id="72730" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="72730" binding="editingDataPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="4">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
-            <properties/>
+            <properties>
+              <background color="-4136976"/>
+              <visible value="true"/>
+            </properties>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="68bc7" class="javax.swing.JButton" binding="editRowButton">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-16762793"/>
+                  <focusable value="false"/>
+                  <foreground color="-4136976"/>
+                  <text value="Изменить существующую запись"/>
+                </properties>
+              </component>
+              <component id="9c756" class="javax.swing.JButton" binding="addRowButton">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-16762793"/>
+                  <focusable value="false"/>
+                  <foreground color="-4136976"/>
+                  <text value="Добавить новую запись"/>
+                </properties>
+              </component>
+            </children>
           </grid>
           <hspacer id="c82d0">
             <constraints>
