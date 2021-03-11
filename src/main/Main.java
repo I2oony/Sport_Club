@@ -160,6 +160,7 @@ public class Main {
                     break;
                 case "closeAddScreen":
                     addRowScreen.clearAll();
+                    mainScreen.setTable();
                     mainFrame.setContentPane(mainScreen.getScreen());
                     mainFrame.revalidate();
                     break;
