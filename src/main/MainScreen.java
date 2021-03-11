@@ -40,6 +40,7 @@ public class MainScreen {
     private JButton editRowButton;
     private JButton addRowButton;
     private JButton deleteRowButton;
+    private JLabel errorMessage;
 
     Role role;
     DatabaseConnect databaseConnect;

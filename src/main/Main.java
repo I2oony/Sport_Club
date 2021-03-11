@@ -56,6 +56,8 @@ public class Main {
         SettingsScreen settingsScreen = new SettingsScreen();
         PasswordScreen passwordScreen = new PasswordScreen();
 
+        AddRowScreen addRowScreen = new AddRowScreen();
+
         ActionListener actions = e -> {
             String action = e.getActionCommand();
             System.out.println("Action performed: " + action);
@@ -152,6 +154,17 @@ public class Main {
                 case "openEditWindow":
                     break;
                 case "openAddWindow":
+                    source.setCredentials("trainer", "TrainerPassword");
+                    mainFrame.setContentPane(addRowScreen.getScreen(mainScreen.getCurrentTable(), source));
+                    mainFrame.revalidate();
+                    break;
+                case "closeAddScreen":
+                    addRowScreen.clearAll();
+                    mainFrame.setContentPane(mainScreen.getScreen());
+                    mainFrame.revalidate();
+                    break;
+                case "addToBase":
+                    addRowScreen.addRow();
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value at action switch: " + action);
@@ -162,6 +175,7 @@ public class Main {
         mainScreen.addActionListener(actions);
         settingsScreen.addActionListener(actions);
         passwordScreen.addActionListener(actions);
+        addRowScreen.addActionListener(actions);
 
         settingsFrame.setContentPane(settingsScreen.getScreen());
         passwordFrame.setContentPane(passwordScreen.getScreen());

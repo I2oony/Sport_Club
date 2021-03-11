@@ -82,7 +82,7 @@
               </component>
             </children>
           </grid>
-          <grid id="72730" binding="editingDataPanel" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="4">
+          <grid id="72730" binding="editingDataPanel" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="4">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -118,7 +118,7 @@
                   <font name="Segoe UI" size="16" style="0"/>
                   <foreground color="-4136976"/>
                   <text value="Добавить новую запись"/>
-                  <visible value="false"/>
+                  <visible value="true"/>
                 </properties>
               </component>
               <component id="d6098" class="javax.swing.JButton" binding="deleteRowButton">
@@ -133,6 +133,16 @@
                   <foreground color="-4136976"/>
                   <text value="Удалить выбранную запись"/>
                   <visible value="true"/>
+                </properties>
+              </component>
+              <component id="8125c" class="javax.swing.JLabel" binding="errorMessage">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <foreground color="-1820073"/>
+                  <text value="Error: no error"/>
+                  <visible value="false"/>
                 </properties>
               </component>
             </children>
