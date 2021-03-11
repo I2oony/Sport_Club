@@ -141,8 +141,14 @@ public class Main {
                     } else {
                         passwordScreen.setErrorVisible(true);
                     }
-/*                case "deleteRow":
-                    mainScreen.getSelectedRowId();*/
+                    break;
+                case "deleteRow":
+                    int id = mainScreen.getSelectedRowId();
+                    if (id!=-1) {
+                        mainScreen.deleteRow(id);
+                    } else {
+                        System.out.println("Deletion is not allowed.");
+                    }
                 case "openEditWindow":
                     break;
                 case "openAddWindow":

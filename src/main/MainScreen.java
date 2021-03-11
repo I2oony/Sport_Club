@@ -66,7 +66,7 @@ public class MainScreen {
             connect = this.databaseConnect.getConnection();
 
             Statement statement = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            String query = "select table_name from information_schema.TABLES where TABLE_SCHEMA='sport'";
+            String query = "show tables";
 
             ResultSet results = statement.executeQuery(query);
 
@@ -95,6 +95,7 @@ public class MainScreen {
 
         editRowButton.addActionListener(actionListener);
         addRowButton.addActionListener(actionListener);
+        deleteRowButton.addActionListener(actionListener);
     }
 
     public void setTable() {
@@ -142,10 +143,14 @@ public class MainScreen {
                     tableView.setEnabled(true);
                 }
 
+                tableView.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
                 JTableHeader tableHeader = tableView.getTableHeader();
+                tableHeader.setReorderingAllowed(false);
 
                 scrollPane.setColumnHeaderView(tableHeader);
                 scrollPane.setViewportView(tableView);
+
                 updateServerState("OK");
             } catch (Throwable e) {
                 updateServerState("Can't fetch selected table");
@@ -172,19 +177,63 @@ public class MainScreen {
             portValue.setText(null);
         }
     }
-/*
+
     public int getSelectedRowId() {
         int id = 0;
         try {
             int rowIndex = tableView.getSelectedRow();
             System.out.println("Row: " + rowIndex);
-            id = (int) tableView.getValueAt(rowIndex, tableView.getSelectedColumn());
-            System.out.println("Want to delete: " + id);
+            id = (int) tableView.getValueAt(rowIndex, 0);
+            System.out.println("Selected: " + id);
             return id;
         } catch (Throwable e) {
             System.out.println("Something went wrong...");
-            return id;
+            return -1;
         }
     }
-    */
+
+    public String getCurrentTable() {
+        return tableSelector.getSelectedItem().toString();
+    }
+
+    public boolean deleteRow(int id) {
+        String table = tableSelector.getSelectedItem().toString();
+        try {
+            connect = this.databaseConnect.getConnection();
+
+            Statement statement = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            String query = "DELETE from " + table + " where id = " + "'" + id + "'";
+
+            int result = statement.executeUpdate(query);
+
+            if (result!=0) {
+                System.out.println("Deleted!");
+            } else {
+                throw new Throwable();
+            }
+
+            setTable();
+
+            statement.close();
+            connect.close();
+
+            return true;
+        } catch (SQLException e) {
+            switch (e.getErrorCode()) {
+                case 1054: //1054 - can't found id = can't delete from this table
+                    System.out.println("You can't delete from this table!");
+                    break;
+                case 1451: //1451 - can't delete - this entity exists in another table
+                    System.out.println("The deletion of the selected entity is restricted due to related data consistent policy!");
+                    break;
+                default:
+                    System.out.println("Unknown SQL Exception!\n" + e.getErrorCode() + " - " + e.getMessage());
+                    break;
+            }
+            return false;
+        } catch (Throwable e) {
+            System.out.println("Something went wrong...");
+            return false;
+        }
+    }
 }

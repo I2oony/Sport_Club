@@ -104,6 +104,7 @@
                   <font name="Segoe UI" size="16" style="0"/>
                   <foreground color="-4136976"/>
                   <text value="Изменить выбранную запись"/>
+                  <visible value="false"/>
                 </properties>
               </component>
               <component id="9c756" class="javax.swing.JButton" binding="addRowButton">
@@ -117,6 +118,7 @@
                   <font name="Segoe UI" size="16" style="0"/>
                   <foreground color="-4136976"/>
                   <text value="Добавить новую запись"/>
+                  <visible value="false"/>
                 </properties>
               </component>
               <component id="d6098" class="javax.swing.JButton" binding="deleteRowButton">
@@ -130,7 +132,7 @@
                   <font name="Segoe UI" size="16" style="0"/>
                   <foreground color="-4136976"/>
                   <text value="Удалить выбранную запись"/>
-                  <visible value="false"/>
+                  <visible value="true"/>
                 </properties>
               </component>
             </children>
