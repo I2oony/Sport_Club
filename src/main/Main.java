@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Pattern;
 
 public class Main {
     enum Role {
@@ -13,7 +14,7 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        AtomicReference<String> host = new AtomicReference<>("localhost");
+        AtomicReference<String> host = new AtomicReference<>("10.8.0.2");
         AtomicInteger port = new AtomicInteger(3306);
         String database = "sport";
 
@@ -106,8 +107,9 @@ public class Main {
 
                     int portValue = port.get();
                     String hostValue = host.get();
+                    Pattern ipMask = Pattern.compile("^((((([1-9])|(1[0-9])|(2[0-4]))?[0-9])|25[0-5])\\.){3}(((([1-9])|(1[0-9])|(2[0-4]))?[0-9])|25[0-5])$"); // reg expr for the IPv4 match
                     try {
-                        if (!(hostField.equals("localhost") || hostField.equals("10.8.0.2"))) {
+                        if (!(hostField.equals("localhost") || ipMask.matcher(hostField).matches())) {
                             throw new Throwable();
                         }
                         hostValue = hostField;
@@ -115,7 +117,7 @@ public class Main {
                     } catch (NumberFormatException exception) {
                         settingsScreen.addErrorText("Порт введён неверно! Допустимые значения: 0-65535");
                     } catch (Throwable textException) {
-                        settingsScreen.addErrorText("Адрес введён неверно! Допустимые значения: 10.8.0.2' или 'localhost");
+                        settingsScreen.addErrorText("Адрес введён неверно! Допустимые значения: валидный IPv4 или 'localhost'");
                     }
                     host.set(hostValue);
                     port.set(portValue);

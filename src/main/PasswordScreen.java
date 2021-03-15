@@ -5,18 +5,24 @@ import java.awt.event.ActionListener;
 
 public class PasswordScreen {
     private JPanel rootPanel;
-    private JTextField passwordField;
+    private JPasswordField passwordField;
     private JButton loginButton;
     private JButton cancelButton;
     private JLabel passwordTitle;
     private JLabel passError;
 
     public JPanel getScreen() {
+        passwordField.setText("");
         return rootPanel;
     }
 
     public String getPasswordField() {
-        return passwordField.getText();
+        char[] input = passwordField.getPassword();
+        String pass = "";
+        for (int i=0; i< input.length; i++) {
+            pass = pass.concat(String.valueOf(input[i]));
+        }
+        return pass;
     }
 
     public void addActionListener(ActionListener actionListener) {

@@ -40,11 +40,12 @@ public class MainScreen {
     private JButton editRowButton;
     private JButton addRowButton;
     private JButton deleteRowButton;
-    private JLabel errorMessage;
+    private JLabel message;
 
     Role role;
     DatabaseConnect databaseConnect;
     Connection connect;
+    String[][] tablesInfo;
 
     public JPanel getScreen(){
         return rootPanel;
@@ -67,7 +68,7 @@ public class MainScreen {
             connect = this.databaseConnect.getConnection();
 
             Statement statement = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            String query = "show tables";
+            String query = "show table status";
 
             ResultSet results = statement.executeQuery(query);
 
@@ -75,11 +76,15 @@ public class MainScreen {
             int rows = results.getRow();
             results.first();
 
+            tablesInfo = new String[rows][2];
+
             tableSelector.removeAllItems();
 
             for (int i = 0; i < rows; i++) {
-                String tableName = results.getString(1);
-                tableSelector.addItem(tableName);
+                tablesInfo[i][0] = results.getString(1);
+                tablesInfo[i][1] = (results.getString(18).equals("VIEW") ? "Сводная информация" : results.getString(18));
+
+                tableSelector.addItem(tablesInfo[i][1]);
                 results.next();
             };
             statement.close();
@@ -101,7 +106,7 @@ public class MainScreen {
 
     public void setTable() {
         if (tableSelector.getSelectedItem() != null) {
-            String tableName = tableSelector.getSelectedItem().toString();
+            String tableName = tablesInfo[tableSelector.getSelectedIndex()][0];
             try {
                 connect = databaseConnect.getConnection();
                 Statement statement = connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -194,11 +199,11 @@ public class MainScreen {
     }
 
     public String getCurrentTable() {
-        return tableSelector.getSelectedItem().toString();
+        return tablesInfo[tableSelector.getSelectedIndex()][0];
     }
 
     public boolean deleteRow(int id) {
-        String table = tableSelector.getSelectedItem().toString();
+        String table = getCurrentTable();
         try {
             connect = this.databaseConnect.getConnection();
 
@@ -218,23 +223,34 @@ public class MainScreen {
             statement.close();
             connect.close();
 
+            setMessage(id + " from " + table + " were successfully deleted!", false);
+
             return true;
         } catch (SQLException e) {
             switch (e.getErrorCode()) {
                 case 1054: //1054 - can't found id = can't delete from this table
-                    System.out.println("You can't delete from this table!");
+                    setMessage("You can't delete from this table!", true);
                     break;
                 case 1451: //1451 - can't delete - this entity exists in another table
-                    System.out.println("The deletion of the selected entity is restricted due to related data consistent policy!");
+                    setMessage("The deletion of the selected entity is restricted due to related data consistent policy!", true);
                     break;
                 default:
-                    System.out.println("Unknown SQL Exception!\n" + e.getErrorCode() + " - " + e.getMessage());
+                    setMessage("Unknown SQL Exception! " + e.getErrorCode() + " - " + e.getMessage(), true);
                     break;
             }
             return false;
         } catch (Throwable e) {
             System.out.println("Something went wrong...");
             return false;
+        }
+    }
+
+    public void setMessage(String messageText, boolean isError) {
+        message.setText(messageText);
+        if (!isError) {
+            message.setForeground(Colors.O_GREEN);
+        } else {
+            message.setForeground(Colors.O_RED);
         }
     }
 }

@@ -1,7 +1,5 @@
 package main;
 
-import com.mysql.cj.jdbc.result.UpdatableResultSet;
-
 import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -34,7 +32,8 @@ public class AddRowScreen {
     private JTextField textField8;
     private JLabel nextIdTitle;
 
-    private JLabel[] values = {value1, value2, value3, value4, value5, value6, value7, value8};
+    private JLabel[] titles = {value1, value2, value3, value4, value5, value6, value7, value8};
+    private String[] values = new String[8];
     private JTextField[] fields = { textField1, textField2, textField3, textField4,
                                     textField5, textField6, textField7, textField8};
 
@@ -67,7 +66,7 @@ public class AddRowScreen {
 
             if (isInsertAllowed==1) {
                 mainPanel.setVisible(true);
-                query = "show columns from " + currentTable;
+                query = "show full columns from " + currentTable;
                 results = statement.executeQuery(query);
 
                 results.last();
@@ -77,8 +76,10 @@ public class AddRowScreen {
                 for (int i = 0; i < rows; i++) {
                     results.next();
                     String column = results.getString(1);
-                    values[i].setText(column);
-                    values[i].setVisible(true);
+                    values[i] = column;
+                    String comment = results.getString(9);
+                    titles[i].setText(comment);
+                    titles[i].setVisible(true);
                     fields[i].setVisible(true);
                 }
 
@@ -113,7 +114,7 @@ public class AddRowScreen {
 
     public void clearAll() {
         for (int i = 0; i<8; i++) {
-            values[i].setVisible(false);
+            titles[i].setVisible(false);
             fields[i].setVisible(false);
         }
     }
@@ -121,7 +122,7 @@ public class AddRowScreen {
     public void addRow() {
         String query = "insert into " + currentTable + " (id";
         for (int i = 0; i<rows; i++) {
-            query = query.concat(", " + values[i].getText());
+            query = query.concat(", " + values[i]);
         }
         query = query.concat(") values ('" + newId);
         for (int i = 0; i<rows; i++) {
